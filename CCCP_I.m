@@ -5,10 +5,11 @@
 % last_date = datenum(sprintf('%02d/%02d/%04d',end_month,end_day,end_year));
 
 result_savename = sprintf('./Results/Combined_Results_%s_to_%s.mat',datestr(first_date),datestr(last_date));
-
+all_results_savename = sprintf('./Results/Combined_Results_%s_to_%s.txt',datestr(first_date),datestr(last_date));
 printout_savename = sprintf('./Results/Printout_Combined_Results_%s_to_%s.mat',datestr(first_date),datestr(last_date));
 results = cell(1,length(template_list));
 printout_results = cell(1,length(template_list));
+all_results = cellstr({'Year','DOY','Seconds','CC Value','Template','Zulu @ Nearest'});
 for template_count = 1:length(template_list);
     
     station_list = template_list{template_count};
@@ -40,13 +41,17 @@ for template_count = 1:length(template_list);
         E = cellstr(num2str(print_results(:,5)));
         F = cellstr(datestr(print_results(:,6)));
         header =cellstr({'Year','DOY','Seconds','CC Value','Template','Zulu @ Nearest'});
-        print_cell = [header; print_cell];
+        
         print_cell = [A,B,C,D,E,F];
-        dlmcell(print_text_savename,print_cell);
+        all_results = [all_results;print_cell];
+        printed_cell = [header; print_cell];
+        dlmcell(print_text_savename,printed_cell);
         save(template_result_savename,print_results);
+        
     end
 end
 save(result_savename,'results');
 save(printout_savename,'printout_results')
+sace(all_results_savename,all_results);
 
 
